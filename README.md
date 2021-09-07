@@ -10,6 +10,6 @@ Zhiqing Qu | zhiqingqu@ufl.edu | github.com/ZhiqingQu
 Identify genetic differences between lung organoids infected with covid19 and those not infected.
 
 ## Dataset
-[Covid 19 Datasets](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL29320)
-[Our Current Dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE162323)
+[Covid 19 Datasets](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL29320)<br>
+[Our Current Dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE162323)<br>
 **^ mail to professor**
