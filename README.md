@@ -11,3 +11,5 @@ Identify genetic differences between lung organoids infected with covid19 and th
 
 ## Dataset
 [Covid 19 Datasets](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL29320)
+[Our Current Dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE162323)
+**^ mail to professor**
