@@ -9,10 +9,10 @@ library(dplyr)
 ```
 
 #### Data Loading
-** Only use relevant colums **
+*Only use relevant columns*
 ```{r}
-infected_raw <- fread(file="data\\GSE162323_slam_inf_params.txt", check.names=TRUE)
-uninfected_raw <- fread("data\\GSE162323_slam_uninf_params.txt", check.names=TRUE)
+infected_raw <- fread(file="data/GSE162323_slam_inf_params.txt", check.names=TRUE)
+uninfected_raw <- fread("data/GSE162323_slam_uninf_params.txt", check.names=TRUE)
 infected_1 = infected_raw[,c(1, 3:8)]
 uninfected_1 = uninfected_raw[,c(1, 3:8)]
 ```
@@ -43,11 +43,10 @@ print(cts)
 
 #### Per Gene Expression Range
 ```{r}
-diffs <- data.frame()
-for (row in cts) {
-  diffs.push()
-}
-print(cts)
+diff <- cts[,2:ncol(cts)] |>
+  apply(1, function(r) log(max(r) - min(r)))
+
+hist(diff)
 ```
 ### Covid 19 Gene Expression Infected vs Uninfected
 
