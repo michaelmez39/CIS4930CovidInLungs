@@ -19,5 +19,5 @@ Identify genetic differences between lung organoids infected with covid19 and th
 4. Unzip these files.
 5. Make folder "data" and move files the "data" folder
 6. Open this project in R Studio
-7. Install "dplyr" and "data.table" e.g. `packages.install("dplyr")`
-
+7. Install "dplyr" and "data.table" with cran e.g. `R> packages.install("dplyr")`
+8. Install "EnhancedVolcano", "DESeq2", and "apeglm" with bioconductor. `R>BiocManager::install("DESeq2", update= FALSE)`
