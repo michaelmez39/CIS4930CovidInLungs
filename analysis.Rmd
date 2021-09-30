@@ -6,6 +6,8 @@ output: html_notebook
 ```{r}
 library(data.table)
 library(dplyr)
+library(purrr)
+library(DESeq2)
 ```
 
 #### Data Loading
@@ -39,6 +41,13 @@ uninfected_dedup <- uninfected_1 %>%
 
 cts <- merge(x=infected_dedup, y=uninfected_dedup, by="gene.symbol")
 print(cts)
+```
+
+*Coldata*
+```{r}
+coldata <- as.data.frame(names(cts)[2:ncol(cts)])
+coldata$condition <- c("infected", "infected", "infected", "infected", "uninfected", "uninfected", "uninfected", "uninfected")
+print(coldata)
 ```
 
 #### Per Gene Expression Range
