@@ -1,13 +1,19 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  word_document: default
+  html_notebook: default
 ---
 **include dependencies**
-```{r}
+```{r, echo=FALSE}
 library(data.table)
 library(dplyr)
 library(purrr)
 library(DESeq2)
+library(ComplexHeatmap)
+library(clusterProfiler)
+library(DOSE)
+library(org.Hs.eg.db)
 ```
 
 #### Data Loading
@@ -44,13 +50,6 @@ cts <- cts_merged[,-1]
 rownames(cts) <- cts_merged[,1]
 print(cts)
 ```
-#### Per Gene Expression Range
-```{r}
-diff <- cts |>
-  apply(1, function(r) log(max(r) - min(r)))
-
-hist(diff)
-```
 ### PCA Plot
 *Coldata*
 ```{r}
@@ -66,7 +65,7 @@ dds <- DESeqDataSetFromMatrix(countData = cts,
 dds <- DESeq(dds) #this is doing a lot of number crunching
 res <- results(dds)
 vsd <- vst(dds, blind=FALSE)
-res
+head(res)
 ```
 *PCA Plot TODO: Correct axis (infected vs uninfected)*
 ```{R}
@@ -83,7 +82,7 @@ deseq_df <- res |>
   dplyr::mutate(threshold = padj < 0.05) |>
   arrange(desc(log2FoldChange))
 
-head(deseq_df)
+head(deseq_df, n=10)
 ```
 ```{r}
 volcano_plot <- EnhancedVolcano::EnhancedVolcano(
@@ -94,4 +93,48 @@ volcano_plot <- EnhancedVolcano::EnhancedVolcano(
   pCutoff = 0.01
 )
 volcano_plot
+```
+### clustProfiler GO
+```{r}
+geneList <- deseq_df[,3]
+names(geneList) = deseq_df[,1]
+go_res <- gseGO(
+  geneList = sort(geneList, decreasing = TRUE),
+  OrgDb = org.Hs.eg.db,
+  ont = "BP",
+  keyType = 'SYMBOL',
+  pvalueCutoff = 0.05,
+  verbose = FALSE
+)
+
+head(go_res, n=10)
+
+```
+#### Dot Plot
+```{r}
+dotplot(go_res, showCategory=10)
+```
+#### CNet Plot
+```{r}
+cnetplot(go_res, node_label="category", 
+        cex_label_category = 1.2) 
+```
+
+For the gene ontology using clusterProfiler we looked at the biological processes domain. Many of the genes that are being expressed are related to the immune response.
+
+### clustProfiler Disease Ontology
+
+
+```{r}
+geneListEntrez <- deseq_df[,3]
+names(geneListEntrez) <- as.character(bitr(deseq_df$names, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db"))
+y <- gseDO(sort(geneListEntrez, decreasing = TRUE),
+           minGSSize     = 120,
+           pvalueCutoff  = 0.05,
+           pAdjustMethod = "BH",
+           verbose       = TRUE)
+
+```
+```{r}
+dotplot(y)
 ```
