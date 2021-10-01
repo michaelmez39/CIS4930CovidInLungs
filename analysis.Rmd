@@ -71,6 +71,7 @@ head(res)
 ```{R}
 plotPCA(vsd, intgroup=c("condition"))
 ```
+#In this plot, we plotted rlog transformed data to check results. To compare the infected and uninfected genes, we plotted one with plotPCA() function. An interesting result is that the plot produced huge and distinct differences between infected and uninfected genes. 
 
 ### Volcano Plot
 #### Some Extra Analysis

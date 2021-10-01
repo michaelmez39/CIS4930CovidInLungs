@@ -15,7 +15,7 @@ Identify genetic differences between lung organoids infected with covid19 and th
 
 ## Setup
 1. Download R, RStudio
-3. Download files "GSE162323_slam_inf_params.txt.gz" and "GSE162323_slam_inf_params.txt.gz" from [the dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE162323)
+3. Download files "GSE162323_slam_inf_params.txt.gz" and "GSE162323_slam_uninf_params.txt.gz" from [the dataset](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE162323)
 4. Unzip these files.
 5. Make folder "data" and move files the "data" folder
 6. Open this project in R Studio
