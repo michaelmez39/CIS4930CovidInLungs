@@ -49,22 +49,23 @@ print(cts)
 #### Per Gene Expression Range
 ```{r}
 diff <- cts |>
-  apply(1, function(r) log(max(r) - min(r)))
+  apply(1, function(r) log(max(r) - min(r), 2))
 
-hist(diff)
+hist(diff, ylab = "Log2Frequency")
 ```
 ### PCA Plot
 *Coldata*
 ```{r}
 coldata <- as.data.frame(names(cts))
 coldata$condition <- c("infected", "infected", "infected", "infected", "uninfected", "uninfected", "uninfected", "uninfected")
+coldata$batches <-  c("one", "two", "three", "four", "one", "two", "three", "four");
 ```
 
 *Gene Expression Matrix*
 ```{r}
 dds <- DESeqDataSetFromMatrix(countData = cts,
                               colData = coldata,
-                              design = ~ condition)
+                              design = ~ condition + batches)
 dds <- DESeq(dds) #this is doing a lot of number crunching
 res <- results(dds)
 vsd <- vst(dds, blind=FALSE)
