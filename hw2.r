@@ -44,10 +44,15 @@ library(DESeq2)
 # dds <- DESeq(dds) #this is doing a lot of number crunching
 # res <- results(dds)
 # vsd <- vst(dds, blind=FALSE)
-# most_variable <- cts[order(res$log2FoldChange),]
+
+# Most Differentially Expressed
+most.variable <- head(cts[order(res$log2FoldChange),], 5000)
+
 # Consensus Cluster Analysis
 library(ConsensusClusterPlus)
-title=tempdir()
+results = ConsensusClusterPlus(as.matrix(most.variable),maxK=6,reps=50,pItem=0.8,pFeature=1,
+ title="./plots/ConsensusClusterPlus",clusterAlg="hc",distance="pearson",seed=1223618388.7149,plot="png")
 
-results = ConsensusClusterPlus(as.matrix(head(most_variable, 5000)),maxK=6,reps=50,pItem=0.8,pFeature=1,
- title=title,clusterAlg="hc",distance="pearson",seed=1223618388.7149,plot="png")
+# PAM Clustering Algorithm
+library(cluster)
+clusters <- pam(most.variable, k=2, diss=FALSE, metric="euclidean")
