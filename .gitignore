@@ -5,6 +5,7 @@ data/
 plots/
 
 #R Stuff
+.RData
 .Rhistory
 *.nb.html
 README.html
