@@ -50,19 +50,39 @@ cts <- cts_merged[,-1]
 rownames(cts) <- cts_merged[,1]
 print(cts)
 ```
+<<<<<<< HEAD
+=======
+#In this results table, we used the wrapper function DESeq() to do the differential expression analysis. We also used tidyverse to do sort or filter before saving our results to a file since it is not sorted or filtered. Finally, we printed out the top results. An interesting result is that LCK and CD7 had similar log2FoldChange results.
+
+#### Per Gene Expression Range
+```{r}
+diff <- cts |>
+  apply(1, function(r) log(max(r) - min(r), 2))
+
+hist(diff, ylab = "Log2Frequency")
+```
+>>>>>>> a1eabce43919f60f8e103bbac9d00764427238a6
 ### PCA Plot
 *Coldata*
 ```{r}
 coldata <- as.data.frame(names(cts))
 coldata$condition <- c("infected", "infected", "infected", "infected", "uninfected", "uninfected", "uninfected", "uninfected")
+<<<<<<< HEAD
 coldata$batch <- c("one", "two", "three", "four", "one", "two", "three", "four")
+=======
+coldata$batches <-  c("one", "two", "three", "four", "one", "two", "three", "four");
+>>>>>>> a1eabce43919f60f8e103bbac9d00764427238a6
 ```
 
 *Gene Expression Matrix*
 ```{r}
 dds <- DESeqDataSetFromMatrix(countData = cts,
                               colData = coldata,
+<<<<<<< HEAD
                               design = ~ condition + batch)
+=======
+                              design = ~ condition + batches)
+>>>>>>> a1eabce43919f60f8e103bbac9d00764427238a6
 dds <- DESeq(dds) #this is doing a lot of number crunching
 res <- results(dds)
 vsd <- vst(dds, blind=FALSE)

@@ -1,5 +1,15 @@
 # Ignore data
 data/
+
+# Generated Plots
+plots/
+
+#R Stuff
+.RData
+.Rhistory
+*.nb.html
+README.html
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
