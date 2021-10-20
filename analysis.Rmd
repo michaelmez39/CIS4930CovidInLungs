@@ -55,13 +55,14 @@ print(cts)
 ```{r}
 coldata <- as.data.frame(names(cts))
 coldata$condition <- c("infected", "infected", "infected", "infected", "uninfected", "uninfected", "uninfected", "uninfected")
+coldata$batch <- c("one", "two", "three", "four", "one", "two", "three", "four")
 ```
 
 *Gene Expression Matrix*
 ```{r}
 dds <- DESeqDataSetFromMatrix(countData = cts,
                               colData = coldata,
-                              design = ~ condition)
+                              design = ~ condition + batch)
 dds <- DESeq(dds) #this is doing a lot of number crunching
 res <- results(dds)
 vsd <- vst(dds, blind=FALSE)
@@ -103,6 +104,7 @@ go_res <- gseGO(
   geneList = sort(geneList, decreasing = TRUE),
   OrgDb = org.Hs.eg.db,
   ont = "BP",
+
   keyType = 'SYMBOL',
   pvalueCutoff = 0.05,
   verbose = FALSE
@@ -128,12 +130,13 @@ For the gene ontology using clusterProfiler we looked at the biological processe
 
 ```{r}
 geneListEntrez <- deseq_df[,3]
-names(geneListEntrez) <- as.character(bitr(deseq_df$names, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db"))
+names(geneListEntrez) <- as.character(deseq_df[,1])
 y <- gseDO(sort(geneListEntrez, decreasing = TRUE),
-           minGSSize     = 120,
            pvalueCutoff  = 0.05,
            pAdjustMethod = "BH",
-           verbose       = TRUE)
+           keyType = 'SYMBOL',
+           verbose       = FALSE
+           )
 
 ```
 ```{r}
