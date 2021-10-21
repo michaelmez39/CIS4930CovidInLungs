@@ -67,22 +67,14 @@ hist(diff, ylab = "Log2Frequency")
 ```{r}
 coldata <- as.data.frame(names(cts))
 coldata$condition <- c("infected", "infected", "infected", "infected", "uninfected", "uninfected", "uninfected", "uninfected")
-<<<<<<< HEAD
-coldata$batch <- c("one", "two", "three", "four", "one", "two", "three", "four")
-=======
 coldata$batches <-  c("one", "two", "three", "four", "one", "two", "three", "four");
->>>>>>> a1eabce43919f60f8e103bbac9d00764427238a6
 ```
 
 *Gene Expression Matrix*
 ```{r}
 dds <- DESeqDataSetFromMatrix(countData = cts,
                               colData = coldata,
-<<<<<<< HEAD
-                              design = ~ condition + batch)
-=======
                               design = ~ condition + batches)
->>>>>>> a1eabce43919f60f8e103bbac9d00764427238a6
 dds <- DESeq(dds) #this is doing a lot of number crunching
 res <- results(dds)
 vsd <- vst(dds, blind=FALSE)
