@@ -23,6 +23,7 @@ infected_raw <- fread(file="data/GSE162323_slam_inf_params.txt", check.names=TRU
 uninfected_raw <- fread("data/GSE162323_slam_uninf_params.txt", check.names=TRUE)
 infected_1 = infected_raw[,c(1, 3:8)]
 uninfected_1 = uninfected_raw[,c(1, 3:8)]
+head(infected_raw)
 ```
 
 *Remove duplicate rows with median and merge uninfected and infected gene expression datasets*
@@ -31,7 +32,8 @@ infected_dedup <- infected_1 %>%
   group_by(gene.symbol) %>%
   summarize(
     one.hour.inf = as.integer(median(X1h.4sU.Readcount, na.rm=TRUE)),
-    two.hour.inf = as.integer(median(X2h.4sU.rep1.Readcount)),
+    two.hour.inf.rep1 = as.integer(median(X2h.4sU.rep1.Readcount)),
+    two.hour.inf.rep2 = as.integer(median(X2h.4sU.rep2.Readcount)),
     three.hour.inf = as.integer(median(X3h.4sU.Readcount)),
     four.hour.inf = as.integer(median(X4h.4sU.Readcount))
     )
@@ -40,7 +42,8 @@ uninfected_dedup <- uninfected_1 %>%
   group_by(gene.symbol) %>%
   summarize(
     one.hour.uninf = as.integer(median(X1h.4sU.Readcount, na.rm=TRUE)),
-    two.hour.uninf = as.integer(median(X2h.4sU.rep2.Readcount)),
+    two.hour.uninf.rep1 = as.integer(median(X2h.4sU.rep1.Readcount)),
+    two.hour.uninf.rep2 = as.integer(median(X2h.4sU.rep2.Readcount)),
     three.hour.uninf = as.integer(median(X3h.4sU.Readcount)),
     four.hour.uninf = as.integer(median(X4h.4sU.Readcount))
     )
@@ -64,10 +67,11 @@ hist(diff, ylab = "Log2Frequency")
 >>>>>>> a1eabce43919f60f8e103bbac9d00764427238a6
 ### PCA Plot
 *Coldata*
+
 ```{r}
 coldata <- as.data.frame(names(cts))
-coldata$condition <- c("infected", "infected", "infected", "infected", "uninfected", "uninfected", "uninfected", "uninfected")
-coldata$batches <-  c("one", "two", "three", "four", "one", "two", "three", "four");
+coldata$condition <- c("infected", "infected", "infected", "infected", "infected", "uninfected", "uninfected", "uninfected", "uninfected", "uninfected")
+coldata$batches <-  c("one", "two.rep1", "two.rep2", "three", "four", "one","two.rep1", "two.rep2", "three", "four");
 ```
 
 *Gene Expression Matrix*
@@ -89,11 +93,11 @@ plotPCA(vsd, intgroup=c("condition"))
 ### Volcano Plot
 #### Some Extra Analysis
 ```{r}
-set.seed(9823249)
+set.seed(96946461)
 deseq_df <- res |>
   as.data.frame() |>
   tibble::rownames_to_column("Gene") |>
-  dplyr::mutate(threshold = padj < 0.05) |>
+  dplyr::mutate(threshold = padj < 0.01) |>
   arrange(desc(log2FoldChange))
 
 head(deseq_df, n=10)
@@ -115,10 +119,9 @@ names(geneList) = deseq_df[,1]
 go_res <- gseGO(
   geneList = sort(geneList, decreasing = TRUE),
   OrgDb = org.Hs.eg.db,
-  ont = "BP",
-
+  ont = "CC",
   keyType = 'SYMBOL',
-  pvalueCutoff = 0.05,
+  pvalueCutoff = 0.01,
   verbose = FALSE
 )
 

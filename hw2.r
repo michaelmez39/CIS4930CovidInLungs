@@ -9,8 +9,8 @@ prepare_data <- function(infected_filepath, uninfected_filepath) {
     infected_1 = infected_raw[,c(1, 3:8)]
     uninfected_1 = uninfected_raw[,c(1, 3:8)]
 
-    infected_dedup <- infected_1 %>%
-    group_by(gene.symbol) %>%
+    infected_dedup <- infected_1 |>
+    group_by(gene.symbol) |>
     summarize(
         one.hour.inf = as.integer(median(X1h.4sU.Readcount, na.rm=TRUE)),
         two.hour.inf = as.integer(median(X2h.4sU.rep1.Readcount)),
@@ -18,8 +18,8 @@ prepare_data <- function(infected_filepath, uninfected_filepath) {
         four.hour.inf = as.integer(median(X4h.4sU.Readcount))
         )
 
-    uninfected_dedup <- uninfected_1 %>%
-    group_by(gene.symbol) %>%
+    uninfected_dedup <- uninfected_1 |>
+    group_by(gene.symbol) |>
     summarize(
         one.hour.uninf = as.integer(median(X1h.4sU.Readcount, na.rm=TRUE)),
         two.hour.uninf = as.integer(median(X2h.4sU.rep2.Readcount)),
@@ -33,10 +33,15 @@ prepare_data <- function(infected_filepath, uninfected_filepath) {
     return(cts)
 }
 cts <- prepare_data("data/GSE162323_slam_inf_params.txt", "data/GSE162323_slam_uninf_params.txt")
+#log_scale <- function (a) {
+#  ifelse(a < 1, 0.0, log2(a))
+#}
+#cts <- apply(cts, 2, log_scale)
+#View(cts)
 coldata <- as.data.frame(names(cts))
 coldata$condition <- c("infected", "infected", "infected", "infected", "uninfected", "uninfected", "uninfected", "uninfected")
 coldata$batches <-  c("one", "two", "three", "four", "one", "two", "three", "four");
-
+barplot(colSums(cts, na.rm = FALSE, dims=1), las=2, main="Total Counts Per Sample (log2)")
 # GSEA Analysis
 dds <- DESeqDataSetFromMatrix(countData = cts,
                               colData = coldata,
